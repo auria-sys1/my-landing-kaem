@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regalos Personalizados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #FAF6F1;
+      --sand:    #EDE3D8;
+      --blush:   #D9A89E;
+      --rose:    #B5675B;
+      --charcoal:#2C2825;
+      --warm:    #7A6A60;
+      --gold:    #C9A96E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ── HELPERS ── */
+    .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════
+       NAV
+    ══════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 5vw;
+      background: rgba(250,246,241,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,169,110,.2);
+    }
+
+    .nav-logo {
+      /* ── COLOCA TU LOGO AQUÍ ──
+         Opción A: reemplaza el <span> por <img src="tu-logo.png" alt="logo" style="height:40px">
+         Opción B: cambia el texto "Tu Logo" por el nombre de tu marca */
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .nav-logo .logo-placeholder {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px dashed var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.55rem; color: var(--gold); text-align: center;
+      letter-spacing: 0.05em; padding: 4px;
+    }
+    .nav-logo span.brand {
+      font-family: 'Playfair Display', serif; 
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; font-size: 0.85rem;
+      color: var(--warm); transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+
+    .nav-cta {
+      background: var(--rose); color: #fff;
+      border: none; padding: .6rem 1.4rem;
+      border-radius: 50px; font-size: .82rem;
+      cursor: pointer; transition: background .3s, transform .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .nav-cta:hover { background: var(--charcoal); transform: translateY(-1px); }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+    }
+
+    .hero-text {
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 6rem 5vw 6rem 8vw;
+      position: relative;
+    }
+    .hero-text::after {
+      content: '';
+      position: absolute; right: 0; top: 15%; bottom: 15%;
+      width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 30px; height: 1px; background: var(--rose);
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--charcoal);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 em {
+      font-style: italic; color: var(--rose);
+    }
+
+    .hero-sub {
+      font-size: 1rem; color: var(--warm);
+      line-height: 1.7; max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--rose); color: #fff;
+      padding: .85rem 2rem; border-radius: 50px;
+      text-decoration: none; font-size: .9rem;
+      transition: background .3s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--charcoal); transform: translateY(-2px); }
+
+    .btn-outline {
+      border: 1.5px solid var(--charcoal); color: var(--charcoal);
+      padding: .85rem 2rem; border-radius: 50px;
+      text-decoration: none; font-size: .9rem;
+      transition: all .3s;
+    }
+    .btn-outline:hover { border-color: var(--rose); color: var(--rose); }
+
+    /* Hero image panel */
+    .hero-visual {
+      position: relative; overflow: hidden;
+      background: var(--sand);
+    }
+
+    /* ── IMAGEN HERO ──
+       Reemplaza el contenido de .hero-img-placeholder por:
+       <img src="tu-foto-principal.jpg" alt="hero" style="width:100%;height:100%;object-fit:cover">
+    */
+    .hero-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      border: 2px dashed var(--gold);
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 10px,
+        rgba(201,169,110,.06) 10px, rgba(201,169,110,.06) 20px
+      );
+    }
+    .placeholder-icon { font-size: 3rem; opacity: .4; }
+    .placeholder-text {
+      font-size: .8rem; color: var(--warm); text-align: center;
+      line-height: 1.5; max-width: 200px;
+    }
+
+    /* Floating badge */
+    .hero-badge {
+      position: absolute; bottom: 2rem; left: -1.5rem;
+      background: #fff; border-radius: 12px;
+      padding: 1rem 1.4rem;
+      box-shadow: 0 8px 32px rgba(44,40,37,.12);
+      display: flex; align-items: center; gap: 0.8rem;
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .badge-icon { font-size: 1.5rem; }
+    .badge-text { font-size: .78rem; color: var(--warm); }
+    .badge-text strong { display: block; color: var(--charcoal); font-size: .88rem; }
+
+    /* ══════════════════════════════════
+       OCASIONES (pill chips)
+    ══════════════════════════════════ */
+    .ocasiones {
+      background: var(--charcoal);
+      padding: 2.5rem 5vw;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .ocasiones p { color: var(--gold); font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; }
+    .ocasion-chip {
+      background: rgba(255,255,255,.08);
+      color: #fff; border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50px; padding: .4rem 1.1rem;
+      font-size: .82rem; white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════
+       PRODUCTOS
+    ══════════════════════════════════ */
+    .productos {
+      padding: 7rem 8vw;
+    }
+    .section-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; margin-bottom: 3.5rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .section-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; line-height: 1.15;
+    }
+    .section-header h2 em { font-style: italic; color: var(--rose); }
+    .see-all {
+      color: var(--rose); text-decoration: none;
+      font-size: .85rem; border-bottom: 1px solid var(--blush);
+      padding-bottom: 2px; transition: color .3s;
+    }
+    .see-all:hover { color: var(--charcoal); }
+
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .producto-card {
+      border-radius: 16px; overflow: hidden;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(44,40,37,.06);
+      transition: transform .3s, box-shadow .3s;
+      cursor: pointer;
+    }
+    .producto-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(44,40,37,.12);
+    }
+
+    /* ── FOTOS DE PRODUCTOS ──
+       Dentro de cada .producto-img, agrega:
+       <img src="foto-producto-N.jpg" alt="nombre" style="width:100%;height:100%;object-fit:cover">
+    */
+    .producto-img {
+      height: 300px; position: relative;
+      background: var(--sand);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .6rem;
+      border: 2px dashed var(--blush);
+    }
+    .producto-img .emoji { font-size: 2.5rem; opacity: .45; }
+    .producto-img .ph-text {
+      font-size: .72rem; color: var(--warm);
+      text-align: center; padding: 0 1rem;
+    }
+
+    .producto-body { padding: 1.2rem 1.4rem 1.4rem; }
+    .producto-tag {
+      font-size: .68rem; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--rose);
+      margin-bottom: .4rem;
+    }
+    .producto-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 400;
+      margin-bottom: .5rem; color: var(--charcoal);
+    }
+    .producto-desc {
+      font-size: .82rem; color: var(--warm);
+      line-height: 1.6; margin-bottom: 1rem;
+    }
+    .producto-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .producto-precio {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--charcoal);
+    }
+    .btn-pedir-link {
+    /* Esto asegura que mantenga el mismo diseño que ya tenía tu botón */
+    display: inline-block;
+    text-decoration: none; /* Quita el subrayado feo de enlace */
+    border: none !important;
+    outline: none !important; 
+    background-color: #f2dbd4; /* El color nude/rosita que tienes de fondo */
+    color: #8c6d62; /* El color de tu texto actual */
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-pedir-link:hover {
+    background-color: var(--rose); /* Cambia a rosa suave al pasar el mouse */
+    color: #fff;
+}
+
+    /* ══════════════════════════════════
+       CÓMO FUNCIONA
+    ══════════════════════════════════ */
+    .como-funciona {
+      background: var(--sand);
+      padding: 7rem 8vw;
+    }
+    .como-funciona h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; text-align: center;
+      margin-bottom: .5rem;
+    }
+    .como-funciona h2 em { font-style: italic; color: var(--rose); }
+    .como-sub { text-align: center; color: var(--warm); font-size: .9rem; margin-bottom: 4rem; }
+
+    .pasos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; position: relative;
+    }
+    .paso {
+      text-align: center; padding: 2rem 1.5rem;
+      background: #fff; border-radius: 16px;
+      position: relative;
+    }
+    .paso-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem; font-weight: 300;
+      color: rgba(181,103,91,.15); line-height: 1;
+      margin-bottom: .5rem;
+    }
+    .paso-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .paso h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; margin-bottom: .5rem;
+    }
+    .paso p { font-size: .82rem; color: var(--warm); line-height: 1.6; }
+
+    /* ══════════════════════════════════
+       GALERÍA / TESTIMONIOS
+    ══════════════════════════════════ */
+    .galeria {
+      padding: 7rem 8vw;
+    }
+    .galeria > .label { margin-bottom: 0.5rem; }
+    .galeria > h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; margin-bottom: 3rem;
+    }
+    .galeria > h2 em { font-style: italic; color: var(--rose); }
+
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 220px 220px;
+      gap: 1rem;
+    }
+    .gal-item {
+      border-radius: 12px; overflow: hidden;
+      background: var(--sand);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .5rem;
+      border: 2px dashed var(--blush);
+    }
+    .gal-item:first-child { grid-row: 1 / 3; }
+    .gal-item .emoji { font-size: 2rem; opacity: .4; }
+    .gal-item .ph-text { font-size: .7rem; color: var(--warm); text-align: center; padding: 0 .8rem; }
+
+    /* Testimonios */
+    .testimonios {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .testimonio {
+      background: #fff; border-radius: 16px;
+      padding: 1.8rem; position: relative;
+      box-shadow: 0 2px 12px rgba(44,40,37,.05);
+    }
+    .stars { color: var(--gold); font-size: 1rem; margin-bottom: 0.8rem; }
+    .testimonio p {
+      font-size: .88rem; color: var(--warm);
+      line-height: 1.7; margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+    .testimonio-autor {
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .autor-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--blush); display: flex;
+      align-items: center; justify-content: center;
+      font-size: .8rem; color: #fff; font-weight: 500;
+    }
+    .autor-info strong { display: block; font-size: .85rem; color: var(--charcoal); }
+    .autor-info span { font-size: .75rem; color: var(--blush); }
+
+    /* ══════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════ */
+    .cta-final {
+      background: var(--charcoal);
+      padding: 7rem 8vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .cta-final h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300; color: #fff; line-height: 1.15;
+    }
+    .cta-final h2 em { font-style: italic; color: var(--gold); }
+    .cta-final p { color: rgba(255,255,255,.6); font-size: .9rem; margin-top: 1rem; line-height: 1.7; }
+
+    .cta-form { display: flex; flex-direction: column; gap: 1rem; }
+    .cta-form input, .cta-form textarea {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff; padding: .9rem 1.2rem;
+      border-radius: 10px; font-family: 'DM Sans', sans-serif;
+      font-size: .88rem; outline: none;
+      transition: border-color .3s;
+    }
+    .cta-form input::placeholder, .cta-form textarea::placeholder { color: rgba(255,255,255,.35); }
+    .cta-form input:focus, .cta-form textarea:focus { border-color: var(--gold); }
+    .cta-form textarea { resize: vertical; min-height: 100px; }
+    .cta-form button {
+      background: var(--rose); color: #fff;
+      border: none; padding: 1rem;
+      border-radius: 10px; font-size: .9rem;
+      cursor: pointer; transition: background .3s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .cta-form button:hover { background: var(--gold); color: var(--charcoal); }
+
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    footer {
+      background: #1E1B18;
+      padding: 2.5rem 8vw;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; color: rgba(255,255,255,.6);
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: rgba(255,255,255,.4); font-size: .78rem; text-decoration: none; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-social { display: flex; gap: 1rem; }
+    .social-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; text-decoration: none;
+      transition: border-color .3s, background .3s;
+    }
+    .social-btn:hover { border-color: var(--gold); background: rgba(201,169,110,.15); }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-text::after { display: none; }
+      .hero-visual { height: 55vw; min-height: 260px; }
+      .hero-badge { left: 1rem; }
+      .cta-final { grid-template-columns: 1fr; }
+      .galeria-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(3, 180px);
+      }
+      .gal-item:first-child { grid-row: 1; }
+      .nav-links { display: none; }
+    }
+
+    /* ── ANIMACIONES DE ENTRADA ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text > * { animation: fadeUp .8s ease both; }
+    .hero-text > *:nth-child(1) { animation-delay: .1s; }
+    .hero-text > *:nth-child(2) { animation-delay: .25s; }
+    .hero-text > *:nth-child(3) { animation-delay: .4s; }
+    .hero-text > *:nth-child(4) { animation-delay: .55s; }
+
+    .btn-whatsapp-directo {
+    display: inline-block;
+    background-color: var(--rose); /* Usa el color rosa de tu marca */
+    color: #fff !important;
+    padding: 1rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none; /* Le quita la línea fea de enlace abajo */
+    border-radius: 50px; /* Lo hace redondito y elegante */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Una sombra suave premium */
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.btn-whatsapp-directo:hover {
+    transform: translateY(-3px); /* Flota un poquito cuando pasas el mouse */
+    background-color: var(--charcoal); /* Cambia de color al pasar el mouse para dar feedback */
+}
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+    <div class="nav-logo">
+        <img src="imagenes/K.png" alt="Kaem CREA" style="height:40px; border-radius: 50%; object-fit: cover;"> 
+        <span class="brand">Kaem CREA</span>
+    </div>
+  <ul class="nav-links">
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Hacer un pedido</button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">
+      <span class="label">Regalos que se sienten únicos</span>
+    </div>
+    <h1>Regala algo que<br><em>realmente</em><br>se recuerde</h1>
+    <p class="hero-sub">
+      Creamos regalos personalizados para cada momento especial: San Valentín, Día de las Madres, cumpleaños y más. Cada pieza, hecha con amor y pensada para quien más quieres.
+    </p>
+    <div class="hero-actions">
+      <a href="#productos" class="btn-primary">Ver productos</a>
+      <a href="#contacto" class="btn-outline">Hacer un pedido</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <!--
+      ╔══════════════════════════════════════╗
+      ║  FOTO PRINCIPAL (HERO)               ║
+      ║  Reemplaza este div por:             ║
+      ║  <img src="foto-hero.jpg"            ║
+      ║       alt="Regalos personalizados"   ║
+      ║       style="width:100%;height:100%; ║
+      ║       object-fit:cover">             ║
+      ╚══════════════════════════════════════╝
+    -->
+    <img src="imagenes/cajitasjoyeria.jpeg" 
+     alt="Regalos personalizados Kaem CREA" 
+     style="width:100%; height:100%; object-fit:cover; border-radius: 20px;">
+
+    <div class="hero-badge">
+      <span class="badge-icon">🎁</span>
+      <div class="badge-text">
+        <strong>100% Personalizado</strong>
+        hecho especialmente para ti
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STRIP DE OCASIONES ══ -->
+<div class="ocasiones">
+  <p>Perfectos para →</p>
+  <span class="ocasion-chip">💝 San Valentín</span>
+  <span class="ocasion-chip">🌸 Día de las Madres</span>
+  <span class="ocasion-chip">🎂 Cumpleaños</span>
+  <span class="ocasion-chip">💒 Bodas & XV Años</span>
+  <span class="ocasion-chip">🎄 Navidad</span>
+  <span class="ocasion-chip">✨ Y más...</span>
+</div>
+
+<!-- ══ PRODUCTOS ══ -->
+<section class="productos" id="productos">
+  <div class="section-header">
+    <div>
+      <p class="label">Nuestros productos</p>
+      <h2>Algo <em>especial</em><br>para cada ocasión</h2>
+    </div>
+    <a href="#contacto" class="see-all">Ver todos los productos →</a>
+  </div>
+
+  <div class="productos-grid">
+
+    <!-- PRODUCTO 1 -->
+    <div class="producto-card">
+    <div class="producto-img">
+    <img src="imagenes/casotru.png" alt="Trufas Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+    
+    <div class="producto-body">
+        <p class="producto-tag">Más vendido</p>
+        <h3 class="producto-name">Trufas Artesanales</h3>
+        <p class="producto-desc">Hechas con amor y los mejores ingredientes. El detalle dulce perfecto para cualquier ocasión.</p>
+        
+        <div class="producto-footer">
+            <span class="producto-price">$150</span>
+            <button class="btn-pedir"><a href="#seccion-pedido" class="btn-pedir-link">Pedir →</a>
+        </div>
+    </div>
+</div>
+
+    <!-- PRODUCTO 2 -->
+    <div class="producto-card">
+      <div class="producto-img">
+    <img src="imagenes/arregloflo.png" alt="Trufas Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
+      <div class="producto-body">
+        <p class="producto-tag">San Valentín</p>
+        <h3 class="producto-name">Carriel con arreglo floral</h3>
+        <p class="producto-desc">Un detalle pensado para sorprender 🤍
+Este hermoso arreglo incluye un carrier de café con un vaso de 6 deliciosas trufas artesanales y un arreglo floral cuidadosamente decorado. Además, incluye tarjeta para dedicatoria, portatarjetas y un portarretrato imantado para convertir el momento en un recuerdo especial.</p>
+        <div class="producto-footer">
+          <span class="producto-precio">$350</span>
+          <button class="btn-pedir"><a href="#seccion-pedido" class="btn-pedir-link">Pedir →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTO 3 -->
+    <div class="producto-card">
+      <div class="producto-img">
+    <img src="imagenes/cajitas.png" alt="Trufas Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+      <div class="producto-body">
+        <p class="producto-tag">Día de las Madres</p>
+        <h3 class="producto-name">Caja con Flor Eterna</h3>
+        <p class="producto-desc">Un detalle pequeño… pero imposible de olvidar ✨
+Nuestra cajita con joyería está diseñada para regalar momentos especiales. Incluye una pieza cuidadosamente presentada en una hermosa caja decorada, lista para sorprender y enamorar desde el primer instante. 💝</p>
+        <div class="producto-footer">
+          <span class="producto-precio"> desde $120</span>
+          <button class="btn-pedir"><a href="#seccion-pedido" class="btn-pedir-link">Pedir →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTO 4 -->
+    <div class="producto-card">
+          <div class="producto-img">
+    <img src="imagenes/porta.png" alt="Trufas Gourmet" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
+      <div class="producto-body">
+        <p class="producto-tag">Recuerdos de bautizo</p>
+        <h3 class="producto-name">Portaretato</h3>
+        <p class="producto-desc">Un recuerdo hecho para atesorarse toda la vida ✨
+Nuestros recuerdos para bautizo incluyen un hermoso portarretrato decorado con listón satinado, diseñado para agradecer la compañía en un día tan especial y conservar un momento lleno de amor y bendiciones. 🤍 100% personalizable</p>
+        <div class="producto-footer">
+          <span class="producto-precio">Desde $85</span>
+          <button class="btn-pedir"><a href="#seccion-pedido" class="btn-pedir-link">Pedir →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CÓMO FUNCIONA ══ -->
+<section class="como-funciona" id="como-funciona">
+  <p class="label" style="text-align:center;margin-bottom:.4rem">Súper sencillo</p>
+  <h2>¿Cómo <em>funciona</em>?</h2>
+  <p class="como-sub">En tres pasos tienes tu regalo listo</p>
+
+  <div class="pasos">
+    <div class="paso">
+      <div class="paso-num">01</div>
+      <div class="paso-icon">💬</div>
+      <h3>Platícanos</h3>
+      <p>Cuéntanos para quién es el regalo, la ocasión y qué tienes en mente. ¡Todas las ideas son bienvenidas!</p>
+    </div>
+    <div class="paso">
+      <div class="paso-num">02</div>
+      <div class="paso-icon">🎨</div>
+      <h3>Lo personalizamos</h3>
+      <p>Diseñamos y creamos tu regalo a mano, con los detalles que lo hacen único e irrepetible.</p>
+    </div>
+    <div class="paso">
+      <div class="paso-num">03</div>
+      <div class="paso-icon">🚚</div>
+      <h3>Te lo entregamos</h3>
+      <p>Acordamos lugar de entrega (punto medio) o bien se envia por Paqueteria Casa Blanca a cualquier sucursal</p>
+    </div>
+    <div class="paso">
+      <div class="paso-num">04</div>
+      <div class="paso-icon">💝</div>
+      <h3>¡Sorprende!</h3>
+      <p>Disfruta la cara de emoción de esa persona especial al recibir algo hecho justo para ella.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALERÍA ══ -->
+<section class="galeria" id="galeria">
+  <p class="label">Nuestros trabajos</p>
+  <h2>Regalos que <em>enamoran</em></h2>
+
+  <div class="galeria-grid">
+    <!--
+      ╔══════════════════════════════════════════╗
+      ║  GALERÍA DE FOTOS                        ║
+      ║  Reemplaza cada div.gal-item con:        ║
+      ║  <img src="galeria-N.jpg"                ║
+      ║       style="width:100%;height:100%;     ║
+      ║       object-fit:cover;border-radius:12px">║
+      ╚══════════════════════════════════════════╝
+    -->
+    <div class="gal-item">
+      <img src="imagenes/2kjas.png" alt="Arreglo Floral Premium" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+    <div class="gal-item">
+      <img src="imagenes/truff.png" alt="Arreglo Floral Premium" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+    <div class="gal-item">
+      <img src="imagenes/cajatru.png" alt="Arreglo Floral Premium" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+    <div class="gal-item">
+      <img src="imagenes/arrecas.png" alt="Arreglo Floral Premium" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+    <div class="gal-item">
+      <img src="imagenes/porta.png" alt="Arreglo Floral Premium" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+</div>
+
+  <!-- Testimonios -->
+  <div class="testimonios">
+    <div class="testimonio">
+      <div class="stars">★★★★★</div>
+      <p>"El regalo quedó hermoso, mi mamá lloró de la emoción. Definitivamente volvería a pedir. ¡Muy recomendado!"</p>
+      <div class="testimonio-autor">
+        <div class="autor-avatar">MG</div>
+        <div class="autor-info">
+          <strong>María G.</strong>
+          <span>Día de las Madres</span>
+        </div>
+      </div>
+    </div>
+    <div class="testimonio">
+      <div class="stars">★★★★★</div>
+      <p>"Pedí un arreglo para San Valentín y superó todas mis expectativas. La presentación era perfecta y me entregó a tiempo."</p>
+      <div class="testimonio-autor">
+        <div class="autor-avatar">RL</div>
+        <div class="autor-info">
+          <strong>Roberto L.</strong>
+          <span>San Valentín</span>
+        </div>
+      </div>
+    </div>
+    <div class="testimonio">
+      <div class="stars">★★★★★</div>
+      <p>"Muy buen servicio y comunicación desde el inicio. El regalo fue exactamente lo que pedí. ¡Muy feliz con el resultado!"</p>
+      <div class="testimonio-autor">
+        <div class="autor-avatar">SC</div>
+        <div class="autor-info">
+          <strong>Sofía C.</strong>
+          <span>Cumpleaños</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL / CONTACTO ══ -->
+<section class="cta-final" id="contacto">
+  <div>
+    <p class="label" style="color:var(--gold)">¿Lista para sorprender?</p>
+    <h2>Haz tu<br><em>pedido</em><br>hoy mismo</h2>
+    <p>Escríbenos y con gusto te ayudamos a crear el regalo perfecto para esa persona especial en tu vida.</p>
+  </div>
+
+  <div class="cta-form" id="seccion-pedido" style="text-align: center; padding: 2rem 0;">
+    <a href="https://wa.me/5213317081377?text=¡Hola!%20Vi%20tu%20página%20y%20me%20gustaría%20hacer%20un%20pedido" 
+       target="_blank" 
+       class="btn-whatsapp-directo">
+       Hacer mi pedido 🎁
+    </a>
+</div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span class="footer-brand">Tu Marca · Regalos Personalizados</span>
+  <!-- ↑ Cambia por el nombre de tu negocio -->
+
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+    <a href="#">WhatsApp</a>
+    <!-- Reemplaza los href con tus enlaces reales -->
+  </div>
+
+  <div class="footer-social">
+    <a class="social-btn" href="#" title="Instagram">🌸</a>
+    <a class="social-btn" href="#" title="WhatsApp">💬</a>
+    <a class="social-btn" href="#" title="Facebook">📘</a>
+  </div>
+</footer>
+
+</body>
+</html>
